@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+  Записи сообщества {{ group.title }}
+{% endblock title %}
+
+{% block content %}
+  <div class="container py-5">
+  <h1>{{ group.title }}</h1>
+  <p>
+    {{ group.description|linebreaksbr }}
+  </p>
+  {% for post in page_obj %}
+  {% include 'includes/posts.html' %}
+    <p>{{ post.text|linebreaks }}</p>
+  {% if post.group %}
+    <a href="{% url 'posts:group_list' post.group.slug %}">Все записи группы</a>
+    {% endif %}
+    {% if not forloop.last %}<hr>{% endif %}
+  {% endfor %}
+  </div>
+  {% include 'posts/includes/paginator.html' %}
+{% endblock content %}
