@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
-
 from ..models import Group, Post
 
 User = get_user_model()
@@ -61,7 +60,7 @@ class TaskURLTests(TestCase):
     def test_post_create_url_redirect_anonymous_on_admin_login(self):
         response = self.guest_client.get(self.url_post_create, follow=True)
         self.assertRedirects(
-            response, self.url_post_detail
+            response, self.url_redirect_to_login
         )
 
     def test_post_edit_url_redirect_not_author_on_post_detail(self):
