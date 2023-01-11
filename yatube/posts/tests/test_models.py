@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+
 from ..models import Group, Post
 
 User = get_user_model()
@@ -21,7 +22,7 @@ class PostModelTest(TestCase):
 
         cls.post = Post.objects.create(
             author=cls.user,
-            text='Тестовый пост',
+            text='Тестовый пост группы',
         )
 
     def test_post_model_have_correct_object_names(self):

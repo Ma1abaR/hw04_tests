@@ -2,6 +2,7 @@ from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
+
 from ..models import Group, Post
 
 User = get_user_model()
@@ -70,10 +71,11 @@ class PostFormTest(TestCase):
             follow=True
         )
 
-        post = Post.objects.first()
-        self.assertRedirects(response, f'/posts/{post.id}/')
+        post = Post.objects.last()
+        # Все редиректы проверяются в юрлах
         self.assertEqual(post.author, self.user)
         self.assertEqual(post.text, form_data['text'])
         self.assertEqual(post.group.id, form_data['group'])
-        self.assertNotEqual(Post.objects.count(), 0)
+        self.assertEqual(Post.objects.count(), 1)
+        self.assertEqual(len(Post.objects.filter(group=self.group)), 0)
         self.assertEqual(response.status_code, HTTPStatus.OK)
