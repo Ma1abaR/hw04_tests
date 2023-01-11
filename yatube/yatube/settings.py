@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
@@ -59,8 +58,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'yatube.urls'
-
-CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
 
 TEMPLATES = [
     {
