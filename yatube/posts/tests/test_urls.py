@@ -68,7 +68,8 @@ class TaskURLTests(TestCase):
         )
 
     def test_post_edit_url_redirect_not_author_on_post_detail(self):
-        response = self.another_user_client.get(self.url_post_edit, follow=True)
+        response = self.another_user_client.get(
+            self.url_post_edit, follow=True)
         self.assertRedirects(
             response, self.url_post_detail
         )
