@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
+
 from ..models import Group, Post
 
 User = get_user_model()
@@ -37,6 +38,9 @@ class TaskURLTests(TestCase):
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
+        self.another_user = User.objects.create_user(username='TestUser')
+        self.another_user_client = Client()
+        self.another_user_client.force_login(self.another_user)
 
     def test_urls_uses_correct_template(self):
         templates_url_names = {
@@ -64,9 +68,9 @@ class TaskURLTests(TestCase):
         )
 
     def test_post_edit_url_redirect_not_author_on_post_detail(self):
-        response = self.authorized_client.get(self.url_post_edit, follow=True)
+        response = self.another_user_client.get(self.url_post_edit, follow=True)
         self.assertRedirects(
-            response, self.url_redirect_to_login
+            response, self.url_post_detail
         )
 
     def test_home_url_exists_at_desired_location(self):

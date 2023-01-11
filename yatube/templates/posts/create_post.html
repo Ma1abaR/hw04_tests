@@ -3,9 +3,9 @@
 {% block title %}
 {% if is_edit %}
   Редактировать пост
-{% else %}
+  {% else %}
   Создать новый пост
-{% endif %}
+  {% endif %}
 {% endblock title %}
 
 {% block content %}
@@ -37,11 +37,11 @@
               {% endfor %}
           {% endif %}
           {% if is_edit %}
-          <form method="post" enctype="multipart/form-data" action="{% url 'posts:post_edit' post_id %}"
+          <form method="post" action="{% url 'posts:post_edit' post_id %}"
           {% else %}
-          <form method="post" enctype="multipart/form-data" action="{% url 'posts:post_create' %}"
-          {% endif %}
-            {% csrf_token %}
+          <form method="post" action="{% url 'posts:post_create' %}"
+          {% endif %}          >
+              {% csrf_token %}
           {% for field in form %}
             <div class="form-group row my-3"
               {% if field.field.required %}

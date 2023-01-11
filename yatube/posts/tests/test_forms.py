@@ -72,7 +72,6 @@ class PostFormTest(TestCase):
         )
 
         post = Post.objects.last()
-        # Все редиректы проверяются в юрлах
         self.assertEqual(post.author, self.user)
         self.assertEqual(post.text, form_data['text'])
         self.assertEqual(post.group.id, form_data['group'])

@@ -31,15 +31,10 @@ class Post(models.Model):
         verbose_name='Группа',
         help_text='Группа, к которой будет относиться пост'
     )
-    image = models.ImageField(
-        'Картинка',
-        upload_to='posts/',
-        blank=True
-    )
 
     class Meta:
         ordering = ['-pub_date']
         default_related_name = 'posts'
 
     def __str__(self) -> str:
-        return self.text[:15]
+        return self.text[:50]
