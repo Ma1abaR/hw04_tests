@@ -1,15 +1,20 @@
-from http import HTTPStatus
-from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+import shutil
+import tempfile
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.conf import settings
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from django.contrib.auth import get_user_model
+from http import HTTPStatus
 
-from ..models import Group, Post
+from ..models import Post, Group, Comment
+
+TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 User = get_user_model()
 
-
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class PostFormTest(TestCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

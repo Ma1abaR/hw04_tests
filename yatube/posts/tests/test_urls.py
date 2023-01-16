@@ -1,13 +1,16 @@
 from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
+from django.core.cache import cache
+from django.urls import reverse
 
 from ..models import Group, Post
 
 User = get_user_model()
 
 
-class TaskURLTests(TestCase):
+class PostURLTests(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -43,22 +46,36 @@ class TaskURLTests(TestCase):
         self.another_user_client.force_login(self.another_user)
 
     def test_urls_uses_correct_template(self):
-        templates_url_names = {
-            self.url_index: 'posts/index.html',
-            self.url_group_list: 'posts/group_list.html',
-            self.url_profile: 'posts/profile.html',
-            self.url_post_detail: 'posts/post_detail.html',
-            self.url_post_edit: 'posts/create_post.html',
-            self.url_post_create: 'posts/create_post.html',
+        """Проверяем запрашиваемые шаблоны страниц через имена."""
+        cache.clear()
+        templates_pages_names = {
+            reverse('posts:index'): 'posts/index.html',
+            reverse(
+                'posts:group_list',
+                kwargs={'slug': PostURLTests.group.slug}
+            ): 'posts/group_list.html',
+            reverse(
+                'posts:profile',
+                kwargs={'username': PostURLTests.user.username}
+            ): 'posts/profile.html',
+            reverse(
+                'posts:post_detail',
+                kwargs={'post_id': PostURLTests.post.id}
+            ): 'posts/post_detail.html',
+            reverse(
+                'posts:post_edit',
+                kwargs={'post_id': PostURLTests.post.id}
+            ): 'posts/create_post.html',
+            reverse('posts:post_create'): 'posts/create_post.html',
+            reverse('posts:follow_index'): 'posts/follow.html'
         }
-
-        for address, template in templates_url_names.items():
-            with self.subTest(address=address):
-                response = self.authorized_client.get(address)
+        for reverse_name, template in templates_pages_names.items():
+            with self.subTest(reverse_name=reverse_name):
+                response = self.authorized_client.get(reverse_name)
                 self.assertTemplateUsed(response, template)
 
-    def test_unexisting_page(self):
-        response = self.guest_client.get(self.url_unexisting_page)
+    def test_urls_uses_correct_unexisting_page(self):
+        response = self.guest_client.get('/unexisting_page/')
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_post_create_url_redirect_anonymous_on_admin_login(self):

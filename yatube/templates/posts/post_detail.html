@@ -5,6 +5,7 @@
 {% endblock title %}
 
 {% block content %}
+{% load thumbnail %}
   <div class="row">
     <aside class="col-12 col-md-3">
       <ul class="list-group list-group-flush">
@@ -14,15 +15,16 @@
         <li class="list-group-item">
           Группа: {{ post.group.title }}, {{ post.group.description|linebreaksbr }}
           {% if post.group %}
-          <a href="{% url 'posts:group_list' post.group.slug %}">Все записи группы</a>
+          <a href="{% url 'posts:group_list' post.group.slug %}">
+            Все записи группы</a>
           {% endif %}
           {% if not forloop.last %}<hr>{% endif %}
         </li>
         <li class="list-group-item">
           Автор: {{ post.author.get_full_name }}
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Всего постов автора: <span>{{ author.posts.count }}</span>
+        <li class="list-group-item">
+          Всего постов автора: <span>{{ post.author.posts.count }}</span>
         </li>
         <li class="list-group-item">
           <a href="{% url 'posts:profile' post.author.username %}">Все посты пользователя</a>
@@ -37,9 +39,13 @@
       </ul>
     </aside>
     <article class="col-12 col-md-9">
+      {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+        <img class="card-img my-2" src="{{ im.url }}">
+      {% endthumbnail %}
       <p>
       {{ post.text|linebreaks}}
       </p>
+      {% include 'posts/includes/comments.html'%}
   </article>
-</div>   
+</div>
 {% endblock content %}
